@@ -1,5 +1,6 @@
 import { Container, H1, Image, Link, PageComponent } from '@javascriptui/core';
-import Button, { ButtonMD, ButtonPrimary, LinkColor } from './components/button';
+import Button, { ButtonMD, ButtonPrimary, ButtonSecondaryGray, LinkColor } from './components/button';
+import ButtonGroup from './components/button-groups';
 
 const logo = require('./assets/logo.png');
 
@@ -35,13 +36,26 @@ export default class App extends PageComponent {
         )
     );
 
+    const buttonGroup = new ButtonGroup([
+      { title: 'text', icon: 'icon-arrow-left', action: () => console.log('run!') },
+      { title: 'text', action: () => console.log('run!'), current: true },
+      { title: 'text', icon: 'icon-arrow-left', action: () => console.log('run!') },
+      { title: '', icon: 'icon-plus', action: () => {} }
+    ]);
+
+    buttonGroup.buttons[2].attrDisabled('disabled');
+
     this.addChild(
       new Container().display('flex').justifyContent('center')
         .addChild(
-          new Container().width(720).marginTop(100).addChild(
-            new Button('Button CTA', 'icon-arrow-right', true)
-              .style(ButtonPrimary, ButtonMD)
-          )
+          new Container().width(720).marginTop(100)
+            .display('flex').flexDirection('column').gap(32)
+            .alignItems('start')
+            .addChild(
+              new Button('Button CTA', 'icon-arrow-right', true)
+                .style(ButtonSecondaryGray, ButtonMD),
+              buttonGroup
+            )
         )
     )
   }
