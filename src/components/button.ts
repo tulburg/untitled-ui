@@ -6,18 +6,22 @@ export const ButtonSM = new Style({
   '--icon-size': '20px',
   height: 36, padding: [8, 14], fontSize: Theme.fonts.textsm
 })
+
 export const ButtonMD = new Style({
   '--icon-size': '20px',
   height: 40, padding: [10, 16], fontSize: Theme.fonts.textsm
 })
+
 export const ButtonLG = new Style({
   '--icon-size': '20px',
   height: 44, padding: [10, 18], fontSize: Theme.fonts.textmd
 })
+
 export const ButtonXL = new Style({
   '--icon-size': '20px',
   height: 48, padding: [12, 20], fontSize: Theme.fonts.textmd
 })
+
 export const Button2XL = new Style({
   '--icon-size': '24px',
   height: 60, padding: [16, 28], fontSize: Theme.fonts.textlg,
@@ -26,15 +30,19 @@ export const Button2XL = new Style({
 export const ButtonIconSM = new Style({
   '--icon-size': '20px', height: 36, width: 36, justifyContent: 'center'
 })
+
 export const ButtonIconMD = new Style({
   '--icon-size': '20px', height: 40, width: 40, justifyContent: 'center'
 })
+
 export const ButtonIconLG = new Style({
   '--icon-size': '20px', height: 44, width: 44, justifyContent: 'center'
 })
+
 export const ButtonIconXL = new Style({
   '--icon-size': '20px', height: 48, width: 48, justifyContent: 'center'
 })
+
 export const ButtonIcon2XL = new Style({
   '--icon-size': '24px', height: 60, width: 60, justifyContent: 'center'
 })
