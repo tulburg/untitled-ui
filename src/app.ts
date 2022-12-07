@@ -1,5 +1,6 @@
 import { Container, H1, Image, Link, PageComponent } from '@javascriptui/core';
-import Button, { ButtonMD, ButtonPrimary, ButtonSecondaryGray, LinkColor } from './components/button';
+import Badge, { BadgeGroup, BadgeIconMDStyle, BadgeMDStyle, BadgeSMStyle, ImageBadge, ImageBadgeLGStyle, ImageBadgeMDStyle } from './components/badge';
+import Button, { ButtonMD, ButtonPrimary, ButtonPrimaryDestructive, ButtonSecondaryGray, LinkColor } from './components/button';
 import ButtonGroup from './components/button-groups';
 
 const logo = require('./assets/logo.png');
@@ -53,8 +54,21 @@ export default class App extends PageComponent {
             .alignItems('start')
             .addChild(
               new Button('Button CTA', 'icon-arrow-right', true)
-                .style(ButtonSecondaryGray, ButtonMD),
-              buttonGroup
+                .style(ButtonPrimary, ButtonMD),
+              buttonGroup,
+              new Container().display('flex').gap(16)
+                .alignItems('center')
+                .addChild(
+                  new Badge('Label', 'error', 'icon-arrow-left')
+                    .style(BadgeMDStyle),
+                  new Badge(undefined, 'success', 'icon-plus')
+                    .style(BadgeIconMDStyle),
+                  new Badge('New feature', 'blue', 'icon-arrow-right', true)
+                    .style(BadgeSMStyle)
+                ),
+              new BadgeGroup('New feature', 'We\'ve released a new feature', 'gray-dark', 'icon-arrow-right'),
+              new BadgeGroup('Fix now', 'There was a problem with that action', 'error-dark', 'icon-arrow-right', true),
+              new ImageBadge('Label', 'gray', logo).style(ImageBadgeLGStyle)
             )
         )
     )
