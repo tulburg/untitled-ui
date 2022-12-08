@@ -1,8 +1,9 @@
 import { Container, H1, Image, Link, PageComponent } from '@javascriptui/core';
 import Badge, { BadgeIconMDStyle, BadgeMDStyle, BadgeSMStyle, ImageBadge, ImageBadgeLGStyle } from './components/badge';
-import Button, { ButtonMD, ButtonPrimary, LinkColor } from './components/button';
+import Button, { ButtonMD, ButtonPrimary, ButtonSecondaryColor, LinkColor } from './components/button';
 import ButtonGroup from './components/button-groups';
 import Input from './components/input';
+import { InputValidator } from './utils/input-validator';
 
 const logo = require('./assets/logo.png');
 const mc = require('./assets/mc.png');
@@ -52,20 +53,29 @@ export default class App extends PageComponent {
       placeholder: 'olivia@untitledui.com', help: 'Send some help',
       type: 'text',
       label: 'Email', hint: 'This is a hint text to help user',
-      icon: 'icon-dollar-sign',
+      icon: 'icon-mail',
       // image: mc,
       // leadingText: 'ftp://',
-      dropdown: {
-        options: [
-          { key: 'US', value: 'United States of America' },
-          { key: 'UK', value: 'United Kingdom' },
-          { key: 'DE', value: 'Germany' },
-          { key: 'PL', value: 'Poland' }
-        ],
-        trailing: true
-      },
-      error: ''
-    }).minWidth(320);
+      // dropdown: {
+      //   options: [
+      //     { key: 'US', value: 'United States of America' },
+      //     { key: 'UK', value: 'United Kingdom' },
+      //     { key: 'DE', value: 'Germany' },
+      //     { key: 'PL', value: 'Poland' }
+      //   ],
+      //   trailing: true
+      // },
+      // error: ''
+    }).minWidth(320) as Input;
+
+    const inputValidator = new InputValidator();
+    input.inputField.on({
+      create() {
+        inputValidator.register(
+          'email', input.inputField, { required: true }
+        )
+      }
+    });
 
     this.addChild(
       new Container().display('flex').justifyContent('center')
@@ -91,9 +101,25 @@ export default class App extends PageComponent {
               // new BadgeGroup('Fix now', 'There was a problem with that action', 'error-dark', 'icon-arrow-right', true),
               new ImageBadge('Label', 'gray', logo).style(ImageBadgeLGStyle),
               new Container().display('flex').flexDirection('column')
+                .alignItems('start')
                 .gap(16).addChild(
                   input,
                   new Input({ placeholder: 'Enter password', label: 'Password', type: 'password' })
+                    .minWidth(320),
+                  new Button('Login', 'icon-arrow-right', true)
+                    .style(ButtonSecondaryColor, ButtonMD)
+                    .on({
+                      click() {
+                        inputValidator.validate().then(res => {
+                          alert('success!');
+                          input.removeError();
+                        }).catch(err => {
+                          if (err.name === 'email') {
+                            input.error('Email is required, please try again!');
+                          }
+                        });
+                      }
+                    })
                 )
             )
         )

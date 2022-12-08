@@ -160,6 +160,7 @@ export default class Input extends Container {
     this.config.error = message;
     this.hint.text(message).color(Theme.colors.error500);
     if (!message) this.hint.display('none');
+    else this.hint.display('inline');
     this.wrapper.border('1px solid ' + Theme.colors.error300);
     this.errorIcon.display('block');
     this.helpIcon.display('none');
