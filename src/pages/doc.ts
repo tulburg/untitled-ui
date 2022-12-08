@@ -44,7 +44,8 @@ export class Documentation extends PageComponent {
       'Dropdowns': 'Dropdowns are used to group together actions in a subview. They’re useful for hiding menus or when you have multiple actions that cannot be separate buttons.',
       'Toggles': 'Toggles (also known as “switches”) is a UI control that has two mutually-exclusive states, such as ON and OFF. The design and functionality of this component is based on a physical switch that allows users to turn things ON or OFF. Toggles are a great visual cue for settings, especially on mobile, because they take less screen estate (in comparison with two radio buttons).',
       'Checkboxes': 'Checkboxes allow users to select one or more items from a set, while radio buttons allow users to select just one option from a set. Both can also be used to turn an option on or off.',
-      'Checkbox groups': 'Checkbox groups are a great way to make checkboxes more interesting, or to add more information to the user’s options without adding clutter. When options are explicitly separated into cards, it’s obvious which elements belong to which group and easier to quickly distinguish between checkbox options.'
+      'Checkbox groups': 'Checkbox groups are a great way to make checkboxes more interesting, or to add more information to the user’s options without adding clutter. When options are explicitly separated into cards, it’s obvious which elements belong to which group and easier to quickly distinguish between checkbox options.',
+      'Input validator': 'Form control validator class that receives a configuration and examine target fields on command to report a succes or error according to specified configurations'
     };
 
     const component = Router.current.data.component;
