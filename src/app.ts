@@ -1,9 +1,11 @@
 import { Container, H1, Image, Link, PageComponent } from '@javascriptui/core';
-import Badge, { BadgeGroup, BadgeIconMDStyle, BadgeMDStyle, BadgeSMStyle, ImageBadge, ImageBadgeLGStyle, ImageBadgeMDStyle } from './components/badge';
-import Button, { ButtonMD, ButtonPrimary, ButtonPrimaryDestructive, ButtonSecondaryGray, LinkColor } from './components/button';
+import Badge, { BadgeIconMDStyle, BadgeMDStyle, BadgeSMStyle, ImageBadge, ImageBadgeLGStyle } from './components/badge';
+import Button, { ButtonMD, ButtonPrimary, LinkColor } from './components/button';
 import ButtonGroup from './components/button-groups';
+import Input from './components/input';
 
 const logo = require('./assets/logo.png');
+const mc = require('./assets/mc.png');
 
 export default class App extends PageComponent {
 
@@ -46,6 +48,25 @@ export default class App extends PageComponent {
 
     buttonGroup.buttons[2].attrDisabled('disabled');
 
+    const input = new Input({
+      placeholder: 'olivia@untitledui.com', help: 'Send some help',
+      type: 'text',
+      label: 'Email', hint: 'This is a hint text to help user',
+      icon: 'icon-dollar-sign',
+      // image: mc,
+      // leadingText: 'ftp://',
+      dropdown: {
+        options: [
+          { key: 'US', value: 'United States of America' },
+          { key: 'UK', value: 'United Kingdom' },
+          { key: 'DE', value: 'Germany' },
+          { key: 'PL', value: 'Poland' }
+        ],
+        trailing: true
+      },
+      error: ''
+    }).minWidth(320);
+
     this.addChild(
       new Container().display('flex').justifyContent('center')
         .addChild(
@@ -66,9 +87,14 @@ export default class App extends PageComponent {
                   new Badge('New feature', 'blue', 'icon-arrow-right', true)
                     .style(BadgeSMStyle)
                 ),
-              new BadgeGroup('New feature', 'We\'ve released a new feature', 'gray-dark', 'icon-arrow-right'),
-              new BadgeGroup('Fix now', 'There was a problem with that action', 'error-dark', 'icon-arrow-right', true),
-              new ImageBadge('Label', 'gray', logo).style(ImageBadgeLGStyle)
+              // new BadgeGroup('New feature', 'We\'ve released a new feature', 'gray-dark', 'icon-arrow-right'),
+              // new BadgeGroup('Fix now', 'There was a problem with that action', 'error-dark', 'icon-arrow-right', true),
+              new ImageBadge('Label', 'gray', logo).style(ImageBadgeLGStyle),
+              new Container().display('flex').flexDirection('column')
+                .gap(16).addChild(
+                  input,
+                  new Input({ placeholder: 'Enter password', label: 'Password', type: 'password' })
+                )
             )
         )
     )

@@ -130,8 +130,18 @@ export class Documentation extends PageComponent {
         paragraph: value => new P().text(value).fontSize(Theme.fonts.textlg)
           .color(Theme.colors.gray500).lineHeight(28).marginTop(28),
         image: value => new Image().attrSrc(value).attrAlt('document cover')
-          .width('100%').margin([24, 0]).borderRadius(8)
+          .width('100%').margin([24, 0]).borderRadius(8),
+        tip: value => new Container().backgroundColor(Theme.colors.gray50)
+          .padding([24, 24, 24, 40]).text(value).color(Theme.colors.gray500)
+          .borderRadius(8).margin([16, 0]).lineHeight(22).position('relative')
+          .pseudo({
+            ':before': {
+              content: '"💡"', width: 24, height: 24, left: 16, position: 'absolute',
+              top: 24
+            }
+          })
       })
     }
   }
 }
+
