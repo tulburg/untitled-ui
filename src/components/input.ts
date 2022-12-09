@@ -1,5 +1,6 @@
-import { Container, EM, IMG, Input as DefaultInput, Label, P, Span } from "@javascriptui/core";
+import { Container, EM, IMG, Input as DefaultInput, Label, P, Span, Textarea } from "@javascriptui/core";
 import Theme from '../theme';
+import DropDown, { DropDownOption } from "./dropdown";
 
 const errorIcon = 'icon-alert-circle';
 const dropDownArrow = 'icon-chevron-down';
@@ -7,7 +8,7 @@ const helpIcon = 'icon-help-circle';
 
 export interface InputConfig {
   placeholder: string
-  type: 'text' | 'password'
+  type: 'text' | 'password' | 'textarea'
   label?: string
   hint?: string
   error?: string
@@ -16,7 +17,7 @@ export interface InputConfig {
   help?: string
   leadingText?: string
   dropdown?: {
-    options: { key: string, value: string }[]
+    options: DropDownOption[]
     trailing: boolean
   }
   link?: boolean
@@ -33,16 +34,23 @@ export default class Input extends Container {
   errorIcon: EM;
   helpIcon: EM;
   main: Container;
+  dropDown: DropDown;
 
   constructor(config: InputConfig) {
     super();
 
     this.config = config;
 
-    this.inputField = new DefaultInput().border(0).fontSize(Theme.fonts.textmd)
-      .backgroundColor(Theme.colors.transparent).attrType(config.type)
+    if (config.type !== 'textarea') {
+      this.inputField = new DefaultInput().height(24).attrType(config.type)
+    } else {
+      this.inputField = new Textarea().height(108).resize('none')
+    }
+
+    this.inputField.border(0).fontSize(Theme.fonts.textmd)
+      .backgroundColor(Theme.colors.transparent)
       .color(Theme.colors.gray900).attrPlaceholder(config.placeholder)
-      .height(24).marginTop(-2).outline('none').flexGrow('1')
+      .marginTop(-2).outline('none').flexGrow('1')
       .pseudo({
         '::placeholder': { color: Theme.colors.gray500 }
       }).on({
@@ -50,22 +58,49 @@ export default class Input extends Container {
         blur: () => this.onBlur()
       });
 
-    const getDropdown = () => new Container()
-      .display('flex').alignItems('center').gap(4)
-      .cursor('pointer')
-      .addChild(
-        new Span().text(config.dropdown.options[0].key)
-          .fontSize(Theme.fonts.textmd).color(Theme.colors.gray900),
-        new EM().addClassName(dropDownArrow).fontSize(20)
-          .color(Theme.colors.gray500)
-      )
+    const getDropdown = () => {
+      let dropDownOpen = false;
+      const caret = new EM().addClassName(dropDownArrow).fontSize(20)
+        .color(Theme.colors.gray500);
+      const selectValue = new Span().text(config.dropdown.options[0].key)
+        .fontSize(Theme.fonts.textmd).color(Theme.colors.gray900);
+      const menu = new Container()
+        .display('flex').alignItems('center').gap(4)
+        .cursor('pointer')
+        .addChild(selectValue, caret);
+
+      this.dropDown = new DropDown({
+        options: config.dropdown.options
+      }).position('absolute').top('calc(100% + 8px)')
+        .left(-2).width('calc(100% + 2px)')
+        .display('none') as DropDown;
+
+      this.wrapper.position('relative').addChild(
+        this.dropDown
+      );
+      const toggle = (showing: boolean) => {
+        caret.transform(!showing ? 'rotate(0deg)' : 'rotate(-180deg)')
+      };
+      this.dropDown.onSelect(item => {
+        selectValue.text(item.key);
+        this.dropDown.toggle(value => toggle(value));
+      });
+      menu.on({
+        click: () => this.dropDown.toggle(value => toggle(value))
+      })
+
+      return menu
+    }
     this.main = new Container();
 
     this.display('flex').flexDirection('column').gap(6);
 
-    this.wrapper = new Container().height(44).borderRadius(8).border('1px solid ' + Theme.colors.gray300)
+    this.wrapper = new Container().height(config.type !== 'textarea' ? 44 : 'auto')
+      .borderRadius(8).border('1px solid ' + Theme.colors.gray300)
       .backgroundColor(Theme.colors.white).padding([10, 14]).boxSizing('border-box')
-      .display('flex').gap(8).alignItems('center');
+      .display('flex').gap(8).alignItems(
+        config.type !== 'textarea' ? 'center' : 'start'
+      );
 
     this.icon = new EM().addClassName(config.icon).fontSize(20)
       .color(Theme.colors.gray500);
@@ -131,9 +166,10 @@ export default class Input extends Container {
     this.addChild(this.main);
 
     this.hint = new Span().text(config.hint).fontSize(Theme.fonts.textsm)
-      .color(Theme.colors.gray500);
+      .color(Theme.colors.gray500).display('none');
+    this.addChild(this.hint);
 
-    if (config.hint) this.addChild(this.hint);
+    if (config.hint) this.hint.display('inline')
 
     if (config.error !== undefined) {
       this.error(config.error);

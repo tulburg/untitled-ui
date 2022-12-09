@@ -1,7 +1,8 @@
-import { Container, H1, Image, Link, PageComponent } from '@javascriptui/core';
+import { Container, H1, Image, Link, P, PageComponent } from '@javascriptui/core';
 import Badge, { BadgeIconMDStyle, BadgeMDStyle, BadgeSMStyle, ImageBadge, ImageBadgeLGStyle } from './components/badge';
 import Button, { ButtonMD, ButtonPrimary, ButtonSecondaryColor, LinkColor } from './components/button';
 import ButtonGroup from './components/button-groups';
+import DropDown from './components/dropdown';
 import Input from './components/input';
 import { InputValidator } from './utils/input-validator';
 
@@ -50,32 +51,57 @@ export default class App extends PageComponent {
     buttonGroup.buttons[2].attrDisabled('disabled');
 
     const input = new Input({
-      placeholder: 'olivia@untitledui.com', help: 'Send some help',
+      placeholder: 'olivia@untitledui.com',
       type: 'text',
-      label: 'Email', hint: 'This is a hint text to help user',
-      icon: 'icon-mail',
-      // image: mc,
-      // leadingText: 'ftp://',
-      // dropdown: {
-      //   options: [
-      //     { key: 'US', value: 'United States of America' },
-      //     { key: 'UK', value: 'United Kingdom' },
-      //     { key: 'DE', value: 'Germany' },
-      //     { key: 'PL', value: 'Poland' }
-      //   ],
-      //   trailing: true
-      // },
-      // error: ''
     }).minWidth(320) as Input;
 
     const inputValidator = new InputValidator();
-    input.inputField.on({
-      create() {
-        inputValidator.register(
-          'email', input.inputField, { required: true }
-        )
-      }
+    // input.inputField.on({
+    //   create() {
+    //     inputValidator.register(
+    //       'email', input.inputField, { required: true }
+    //     )
+    //   }
+    // });
+
+    const message = new Input({
+      placeholder: 'Enter a description', label: 'Description', type: 'textarea',
+      icon: 'icon-mail'
+    }).minWidth(320) as Input;
+    // message.inputField.on({
+    //   create() {
+    //     inputValidator.register('message', this, { required: true })
+    //   }
+    // });
+
+
+    const dropdown = new DropDown({
+      options: [
+        { key: 'View profile', value: 'profile', command: 'CTL P', endGroup: true },
+        { key: 'Settings', value: 'settings', suffix: '@tulburg', command: 'Alt+S' },
+        { key: 'Image sample', value: 'image', image: 'https://c1.wallpaperflare.com/preview/651/682/531/portrait-black-and-white-architecture-sweater.jpg' },
+        { key: 'Keyboard shortcut', value: 'keyboard' },
+      ]
     });
+    dropdown.disable(2, true);
+
+
+    const inputWithDropDown = new Input({
+      placeholder: 'Select team member', label: 'Team', type: 'text',
+      dropdown: {
+        options: [
+          { key: 'US', value: 'us' },
+          { key: 'UK', value: 'uk' },
+          { key: 'CA', value: 'ca' },
+        ],
+        trailing: false
+      }
+    }).minWidth('100%').marginTop(40) as Input;
+
+    inputWithDropDown.dropDown.onSelect(item => {
+      console.log(item);
+    })
+
 
     this.addChild(
       new Container().display('flex').justifyContent('center')
@@ -106,6 +132,7 @@ export default class App extends PageComponent {
                   input,
                   new Input({ placeholder: 'Enter password', label: 'Password', type: 'password' })
                     .minWidth(320),
+                  message,
                   new Button('Login', 'icon-arrow-right', true)
                     .style(ButtonSecondaryColor, ButtonMD)
                     .on({
@@ -117,9 +144,16 @@ export default class App extends PageComponent {
                           if (err.name === 'email') {
                             input.error('Email is required, please try again!');
                           }
+                          if (err.name === 'message') {
+                            message.error('Please enter a description');
+                          }
                         });
                       }
-                    })
+                    }),
+                  new Container().marginTop(64).marginBottom(200).addChild(
+                    dropdown,
+                    inputWithDropDown
+                  )
                 )
             )
         )
