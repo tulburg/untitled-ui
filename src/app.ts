@@ -102,6 +102,8 @@ export default class App extends PageComponent {
       console.log(item);
     });
 
+
+
     const selectInput = new Input({
       type: 'select', placeholder: 'Select team member',
       icon: 'icon-user', label: 'Team',
@@ -113,12 +115,33 @@ export default class App extends PageComponent {
         ]
       }
     }).marginTop(16) as Input;
+
     selectInput.inputField.on({
       create() {
         inputValidator.register('team-select', this, { required: true });
       }
-    })
+    });
 
+    const searchInput = new Input({
+      placeholder: 'Search', type: 'autocomplete', icon: 'icon-search',
+      dropdown: {
+        options: [
+          { key: 'Olivia Rhye', value: '@olivia', suffix: '@olivia', icon: 'icon-user' },
+          { key: 'Phoenix Baker', value: '@phoenix', suffix: '@phoenix', icon: 'icon-settings' },
+          { key: 'Lana Steiner', value: '@lana', suffix: '@lana', icon: 'icon-user' }
+        ]
+      }
+    }).marginTop(24) as Input;
+
+    searchInput.inputField.on({
+      create() {
+        inputValidator.register('user-search', this, { required: true });
+      }
+    });
+    searchInput.dropDown.onSelect(item => {
+      console.log(item);
+      searchInput.removeError();
+    })
 
     this.addChild(
       new Container().display('flex').justifyContent('center')
@@ -167,13 +190,17 @@ export default class App extends PageComponent {
                           if (err.name === 'team-select') {
                             selectInput.error('Please select a team member');
                           }
+                          if (err.name === 'user-search') {
+                            searchInput.error('Find a user first');
+                          }
                         });
                       }
                     }),
                   new Container().marginTop(64).marginBottom(200).addChild(
-                    dropdown.zIndex('1').position('relative'),
-                    inputWithDropDown.zIndex('2').position('relative'),
-                    selectInput.zIndex('3')
+                    dropdown.zIndex('4').position('relative'),
+                    inputWithDropDown.zIndex('3').position('relative'),
+                    selectInput.zIndex('2').position('relative'),
+                    searchInput.zIndex('1').position('relative')
                   )
                 )
             )

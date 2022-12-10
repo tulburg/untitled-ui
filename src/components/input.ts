@@ -77,7 +77,7 @@ export default class Input extends Container {
         .color(Theme.colors.gray500);
       const selectValue = new Span().text(config.dropdown.options[0].key)
         .fontSize(Theme.fonts.textmd).color(Theme.colors.gray900);
-      const menu = new Container()
+      this.selectedContainer = new Container()
         .display('flex').alignItems('center').gap(4)
         .cursor('pointer')
         .addChild(selectValue, this.caret);
@@ -89,11 +89,12 @@ export default class Input extends Container {
         selectValue.text(item.key);
         this.dropDown.toggle(value => toggle(value));
       });
-      menu.on({
+      this.selectedContainer.on({
         click: () => this.dropDown.toggle(value => toggle(value))
-      })
+      });
+      document.addEventListener('click', this.dropDownOutsideClick);
 
-      return menu
+      return this.selectedContainer
     }
     this.main = new Container();
 
@@ -111,7 +112,8 @@ export default class Input extends Container {
 
     if (config.icon) this.wrapper.addChild(this.icon);
 
-    if (config.dropdown && !config.dropdown.trailing && config.type !== 'select') {
+    if (config.dropdown && !config.dropdown.trailing
+      && config.type !== 'select' && config.type !== 'autocomplete') {
       this.wrapper.addChild(getDropdown())
     }
 
@@ -157,7 +159,8 @@ export default class Input extends Container {
     if (config.type === 'select') {
       createDropDown();
       this.selectedContainer = new Container().position('absolute')
-        .height('auto').width('calc(100% - (20px + 8px + 14px))').backgroundColor(Theme.colors.white)
+        .height('auto').width('calc(100% - (20px + 8px + 14px))')
+        .backgroundColor(Theme.colors.white)
         .marginLeft(-14).borderRadius(8);
       const self = this;
       this.caret = new EM().addClassName(dropDownArrow).color(Theme.colors.gray500)
@@ -187,7 +190,9 @@ export default class Input extends Container {
           ':hover': { backgroundColor: Theme.colors.transparent }
         }).on({
           click: () => {
-            this.dropDown.toggle();
+            this.dropDown.toggle(value => {
+              this.caret.transform(value ? 'rotate(-180deg)' : 'rotate(0deg)')
+            });
           }
         })
         this.selectedContainer.addChild(selected);
@@ -195,6 +200,28 @@ export default class Input extends Container {
       this.wrapper.position('relative').addChild(
         this.selectedContainer
       )
+    }
+
+    if (config.type === 'autocomplete') {
+      createDropDown();
+      this.inputField.on({
+        focus: (e: any) => {
+          this.dropDown.filterItems(e.target.value);
+          this.dropDown.show();
+          document.addEventListener('click', this.dropDownOutsideClick);
+        },
+        input: (e: any) => {
+          if (!this.dropDown.isShowing) this.dropDown.show();
+          const value = e.target.value;
+          this.dropDown.filterItems(value);
+        }
+      });
+      this.dropDown.onSelect(item => {
+        this.inputField.dispatch('input');
+        (<any>this.inputField.node()).value = item.key;
+        this.dropDown.hide();
+        this.dropDown.filterItems(item.key);
+      })
     }
 
     if (config.label) {
@@ -229,8 +256,10 @@ export default class Input extends Container {
 
   onFocus() {
     // this.removeError();
-    this.dropDown.show();
-    this.caret.transform('rotate(-180deg)');
+    if (this.config.type === 'select') {
+      this.dropDown.show();
+      this.caret.transform('rotate(-180deg)');
+    }
     if (this.config.error !== undefined) {
       this.wrapper.boxShadow('0px 0px 0px 4px ' + Theme.colors.error100)
     } else this.wrapper.boxShadow('0px 0px 0px 4px ' + Theme.colors.primary100);
@@ -270,13 +299,13 @@ export default class Input extends Container {
     if (!this.dropDown || !this.dropDown.node()) return;
     if (!this.dropDown.node().contains(e.target as any)
       && e.target !== this.inputField.node()
-      && e.target !== this.caret.node()
-      && e.target !== this.selectedContainer.node()
-      && !this.selectedContainer.node().contains(e.target as any)
+      && (!this.caret || e.target !== this.caret.node())
+      && (!this.selectedContainer || e.target !== this.selectedContainer.node())
+      && (!this.selectedContainer || !this.selectedContainer.node().contains(e.target as any))
     ) {
       if (this.dropDown.isShowing) {
         this.dropDown.hide();
-        this.caret.transform('rotate(0deg)');
+        if (this.caret) this.caret.transform('rotate(0deg)');
         e.preventDefault();
         e.stopPropagation();
       }

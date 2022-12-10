@@ -24,6 +24,8 @@ export default class DropDown extends Container {
   config: DropDownConfig;
   selectionListeners: ((item: DropDownOption) => void)[] = [];
   isShowing: boolean;
+  lastSelected: DropDownItem;
+  debounce: any;
 
   constructor(config: DropDownConfig) {
     super();
@@ -38,19 +40,42 @@ export default class DropDown extends Container {
       this.border('1px solid ' + Theme.colors.gray100)
         .borderRadius(8).boxShadow(Theme.shadows.lg)
     }
-    const self = this;
-    let lastSelected: DropDownItem;
+
     this.addChild(
-      ...config.options.map(item => new DropDownItem(item, config).on({
-        selected() {
-          if (!self.config.multiselect) {
-            if (lastSelected && lastSelected !== this) lastSelected.select(false);
-          }
-          self.selectionListeners.forEach(listener => listener(item));
-          lastSelected = this;
-        }
-      }))
+      ...config.options.map(item => this.createItem(item))
     )
+  }
+
+  private createItem(item: DropDownOption) {
+    const self = this;
+    const dropDownItem = new DropDownItem(item, this.config).on({
+      selected() {
+        if (!self.config.multiselect) {
+          if (self.lastSelected && self.lastSelected !== this) self.lastSelected.select(false);
+        }
+        self.selectionListeners.forEach(listener => listener(item));
+        self.lastSelected = this;
+      }
+    });
+    dropDownItem.tag(item.key + ' ' + item.value)
+    return dropDownItem;
+  }
+
+  filterItems(value: string) {
+    if (this.debounce) clearTimeout(this.debounce);
+    this.debounce = setTimeout(() => {
+      if (value === '' && this.lastSelected) this.lastSelected.select(false);
+      let matched = false;
+      this.children().forEach((child: ELEMENT, index: number) => {
+        if ((child.tag() as string).toLowerCase().indexOf(value.toLowerCase()) > -1) {
+          child.display('flex');
+          matched = true;
+        } else {
+          child.display('none');
+        }
+        if (!matched && index === this.children().length - 1) this.hide();
+      });
+    }, 250);
   }
 
   onSelect(listener: (item: DropDownOption) => void) {
