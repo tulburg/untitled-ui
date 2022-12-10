@@ -100,6 +100,23 @@ export default class App extends PageComponent {
 
     inputWithDropDown.dropDown.onSelect(item => {
       console.log(item);
+    });
+
+    const selectInput = new Input({
+      type: 'select', placeholder: 'Select team member',
+      icon: 'icon-user', label: 'Team',
+      dropdown: {
+        options: [
+          { key: 'Olivia Rhye', value: '@olivia', suffix: '@olivia', icon: 'icon-user' },
+          { key: 'Phoenix Baker', value: '@phoenix', suffix: '@phoenix', icon: 'icon-settings' },
+          { key: 'Lana Steiner', value: '@lana', suffix: '@lana', icon: 'icon-user' }
+        ]
+      }
+    }).marginTop(16) as Input;
+    selectInput.inputField.on({
+      create() {
+        inputValidator.register('team-select', this, { required: true });
+      }
     })
 
 
@@ -108,7 +125,7 @@ export default class App extends PageComponent {
         .addChild(
           new Container().width(720).marginTop(100)
             .display('flex').flexDirection('column').gap(32)
-            .alignItems('start')
+            .alignItems('start').paddingLeft(100)
             .addChild(
               new Button('Button CTA', 'icon-arrow-right', true)
                 .style(ButtonPrimary, ButtonMD),
@@ -147,12 +164,16 @@ export default class App extends PageComponent {
                           if (err.name === 'message') {
                             message.error('Please enter a description');
                           }
+                          if (err.name === 'team-select') {
+                            selectInput.error('Please select a team member');
+                          }
                         });
                       }
                     }),
                   new Container().marginTop(64).marginBottom(200).addChild(
-                    dropdown,
-                    inputWithDropDown
+                    dropdown.zIndex('1').position('relative'),
+                    inputWithDropDown.zIndex('2').position('relative'),
+                    selectInput.zIndex('3')
                   )
                 )
             )

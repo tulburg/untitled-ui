@@ -57,15 +57,23 @@ export default class DropDown extends Container {
     this.selectionListeners.push(listener);
   }
 
-  toggle(listener: (toogle: boolean) => void) {
+  show() {
+    this.display('block');
+    this.isShowing = true;
+  }
+
+  hide() {
+    this.isShowing = false;
+    this.display('none');
+  }
+
+  toggle(listener?: (toogle: boolean) => void) {
     if (this.isShowing) {
-      this.isShowing = false;
-      this.display('none');
+      this.hide();
     } else {
-      this.display('block');
-      this.isShowing = true;
+      this.show();
     }
-    listener(this.isShowing);
+    if (listener) listener(this.isShowing);
   }
 
   disable(index: number, toggle: boolean) {
