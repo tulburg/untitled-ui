@@ -2,8 +2,10 @@ import { Container, H1, Image, Link, P, PageComponent } from '@javascriptui/core
 import Badge, { BadgeIconMDStyle, BadgeMDStyle, BadgeSMStyle, ImageBadge, ImageBadgeLGStyle } from './components/badge';
 import Button, { ButtonMD, ButtonPrimary, ButtonSecondaryColor, LinkColor } from './components/button';
 import ButtonGroup from './components/button-groups';
+import Checkbox from './components/checkbox';
 import DropDown from './components/dropdown';
 import Input from './components/input';
+import Toggle from './components/toggle';
 import { InputValidator } from './utils/input-validator';
 
 const logo = require('./assets/logo.png');
@@ -81,7 +83,8 @@ export default class App extends PageComponent {
         { key: 'Settings', value: 'settings', suffix: '@tulburg', command: 'Alt+S' },
         { key: 'Image sample', value: 'image', image: 'https://c1.wallpaperflare.com/preview/651/682/531/portrait-black-and-white-architecture-sweater.jpg' },
         { key: 'Keyboard shortcut', value: 'keyboard' },
-      ]
+      ],
+      type: 'checkbox'
     });
     dropdown.disable(2, true);
 
@@ -141,7 +144,21 @@ export default class App extends PageComponent {
     searchInput.dropDown.onSelect(item => {
       console.log(item);
       searchInput.removeError();
-    })
+    });
+
+    const toggle = new Toggle({
+      title: 'Remember me', checked: true,
+      description: 'Save my login details for next time.'
+    });
+
+    toggle.disable(true);
+
+
+    const checkbox = new Checkbox({
+      type: 'checkbox',
+      title: 'Remember me', description: 'Save my login details'
+    });
+
 
     this.addChild(
       new Container().display('flex').justifyContent('center')
@@ -173,6 +190,8 @@ export default class App extends PageComponent {
                   new Input({ placeholder: 'Enter password', label: 'Password', type: 'password' })
                     .minWidth(320),
                   message,
+                  toggle,
+                  checkbox,
                   new Button('Login', 'icon-arrow-right', true)
                     .style(ButtonSecondaryColor, ButtonMD)
                     .on({
