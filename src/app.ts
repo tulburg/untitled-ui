@@ -1,4 +1,5 @@
 import { Container, H1, Image, Link, P, PageComponent } from '@javascriptui/core';
+import Avatar, { AvatarGroup } from './components/avatar';
 import Badge, { BadgeIconMDStyle, BadgeMDStyle, BadgeSMStyle, ImageBadge, ImageBadgeLGStyle } from './components/badge';
 import Button, { ButtonMD, ButtonPrimary, ButtonSecondaryColor, LinkColor } from './components/button';
 import ButtonGroup from './components/button-groups';
@@ -159,6 +160,16 @@ export default class App extends PageComponent {
       title: 'Remember me', description: 'Save my login details'
     });
 
+    const avatarGroup = new AvatarGroup([
+      { src: 'https://c1.wallpaperflare.com/preview/651/682/531/portrait-black-and-white-architecture-sweater.jpg' },
+      { src: 'https://c1.wallpaperflare.com/preview/651/682/531/portrait-black-and-white-architecture-sweater.jpg' },
+      { src: 'https://c1.wallpaperflare.com/preview/651/682/531/portrait-black-and-white-architecture-sweater.jpg' },
+      { src: 'https://c1.wallpaperflare.com/preview/651/682/531/portrait-black-and-white-architecture-sweater.jpg' },
+    ], 60, () => {
+      console.log('will add user')
+    })
+
+    let check = true;
 
     this.addChild(
       new Container().display('flex').justifyContent('center')
@@ -192,10 +203,22 @@ export default class App extends PageComponent {
                   message,
                   toggle,
                   checkbox,
+
+                  new Avatar({
+                    src: 'https://c1.wallpaperflare.com/preview/651/682/531/portrait-black-and-white-architecture-sweater.jpg',
+                    online: true,
+                    size: 'lg',
+                  }),
+
+                  avatarGroup,
                   new Button('Login', 'icon-arrow-right', true)
                     .style(ButtonSecondaryColor, ButtonMD)
                     .on({
                       click() {
+                        checkbox.check(check);
+                        check = !check;
+
+                        return;
                         inputValidator.validate().then(res => {
                           alert('success!');
                           input.removeError();
