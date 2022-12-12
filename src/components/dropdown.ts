@@ -8,6 +8,7 @@ export interface DropDownConfig {
 }
 
 const checkIcon = 'icon-check';
+const tickIcon = 'icon-check';
 
 export interface DropDownOption {
   key: string
@@ -119,6 +120,7 @@ export class DropDownItem extends Container {
   check: EM;
   isSelected = false;
   isDisabled = false;
+  checkMark: EM;
 
   constructor(item: DropDownOption, config: DropDownConfig) {
     super();
@@ -148,17 +150,21 @@ export class DropDownItem extends Container {
       this.addChild(this.icon)
     }
 
+    const leftContainer = new Container();
+
     if (config.type === 'checkbox' || config.type === 'radio') {
       this.radioCheck = new DefaultInput();
       this.addChild(
-        this.radioCheck.attrType(config.type)
-          .appearance('none').border(
-            (config.type === 'checkbox' ? 1 : 1.5) + 'px solid ' + (
-              config.type === 'checkbox' ? Theme.colors.gray300 : Theme.colors.gray700
-            )
-          ).backgroundColor(Theme.colors.white).height(16).width(16)
-          .borderRadius(config.type === 'checkbox' ? 4 : 8)
-          .cursor('pointer')
+        leftContainer.addChild(
+          this.radioCheck.attrType(config.type)
+            .appearance('none').border(
+              (config.type === 'checkbox' ? 1 : 1.5) + 'px solid ' + (
+                config.type === 'checkbox' ? Theme.colors.gray300 : Theme.colors.gray700
+              )
+            ).backgroundColor(Theme.colors.white).height(16).width(16)
+            .borderRadius(config.type === 'checkbox' ? 4 : 8)
+            .cursor('pointer')
+        )
       )
       if (config.type === 'checkbox') {
         this.radioCheck.pseudo({
@@ -172,6 +178,14 @@ export class DropDownItem extends Container {
           }
         })
       }
+
+      this.checkMark = new EM()
+        .addClassName(tickIcon)
+        .fontSize(12).height(16).width(16).color(Theme.colors.primary600)
+        .pointerEvents('none').position('absolute')
+        .left(2).top(2).display('none');
+
+      leftContainer.position('relative').addChild(this.checkMark)
     }
 
     if (item.image) {
@@ -217,10 +231,18 @@ export class DropDownItem extends Container {
     if (toggle) {
       this.backgroundColor(Theme.colors.gray50);
       this.check.display('inline');
+      this.radioCheck.borderColor(Theme.colors.primary600);
       this.dispatch('selected');
+      if (this.checkMark) {
+        this.checkMark.display('inline');
+      }
     } else {
       this.backgroundColor(Theme.colors.white);
       this.check.display('none');
+      this.radioCheck.borderColor(Theme.colors.gray300);
+      if (this.checkMark) {
+        this.checkMark.display('none');
+      }
     }
   }
 
@@ -233,6 +255,7 @@ export class DropDownItem extends Container {
         if (check) check.backgroundColor(Theme.colors.gray100)
           .borderColor(Theme.colors.gray200);
       });
+      if (this.checkMark) this.checkMark.color(Theme.colors.gray200)
       if (this.image) this.image.opacity('0.3')
       this.label.color(Theme.colors.gray200);
       if (this.subtext) this.subtext.color(Theme.colors.gray200);
