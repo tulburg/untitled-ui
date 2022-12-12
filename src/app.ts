@@ -7,6 +7,7 @@ import Checkbox from './components/checkbox';
 import DropDown from './components/dropdown';
 import Input from './components/input';
 import Toggle from './components/toggle';
+import Tooltip from './components/tooltip';
 import { InputValidator } from './utils/input-validator';
 
 const logo = require('./assets/logo.png');
@@ -171,6 +172,12 @@ export default class App extends PageComponent {
 
     let check = true;
 
+    const tooltip = new Tooltip('This is a tooltip', {
+      arrow: true, mode: 'light', position: 'bottom-left',
+      supportingText: 'Tooltips are used to describe or identify an element. In most scenarios, tooltips help the user understand the meaning, function or alt-text of an element.'
+    });
+    // tooltip.attach(searchInput);
+
     this.addChild(
       new Container().display('flex').justifyContent('center')
         .addChild(
@@ -195,7 +202,7 @@ export default class App extends PageComponent {
               // new BadgeGroup('Fix now', 'There was a problem with that action', 'error-dark', 'icon-arrow-right', true),
               new ImageBadge('Label', 'gray', logo).style(ImageBadgeLGStyle),
               new Container().display('flex').flexDirection('column')
-                .alignItems('start')
+                .alignItems('start').marginBottom(200)
                 .gap(16).addChild(
                   input,
                   new Input({ placeholder: 'Enter password', label: 'Password', type: 'password' })
@@ -238,12 +245,13 @@ export default class App extends PageComponent {
                         });
                       }
                     }),
-                  new Container().marginTop(64).marginBottom(200).addChild(
+                  new Container().marginTop(64).addChild(
                     dropdown.zIndex('4').position('relative'),
                     inputWithDropDown.zIndex('3').position('relative'),
                     selectInput.zIndex('2').position('relative'),
                     searchInput.zIndex('1').position('relative')
-                  )
+                  ),
+                  tooltip
                 )
             )
         )
