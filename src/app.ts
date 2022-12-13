@@ -6,6 +6,7 @@ import ButtonGroup from './components/button-groups';
 import Checkbox from './components/checkbox';
 import DropDown from './components/dropdown';
 import Input from './components/input';
+import { ProgressBar, ProgressCircle } from './components/progress-indicator';
 import Toggle from './components/toggle';
 import Tooltip from './components/tooltip';
 import { InputValidator } from './utils/input-validator';
@@ -136,7 +137,7 @@ export default class App extends PageComponent {
           { key: 'Lana Steiner', value: '@lana', suffix: '@lana', icon: 'icon-user' }
         ]
       }
-    }).marginTop(24) as Input;
+    }).marginTop(24).marginBottom(40).zIndex('2') as Input;
 
     searchInput.inputField.on({
       create() {
@@ -173,10 +174,16 @@ export default class App extends PageComponent {
     let check = true;
 
     const tooltip = new Tooltip('This is a tooltip', {
-      arrow: true, mode: 'light', position: 'bottom-left',
+      arrow: true, mode: 'dark', position: 'bottom-left',
       supportingText: 'Tooltips are used to describe or identify an element. In most scenarios, tooltips help the user understand the meaning, function or alt-text of an element.'
     });
-    // tooltip.attach(searchInput);
+    tooltip.attach(searchInput);
+
+    const progress = new ProgressBar('tooltip-top');
+    progress.progress(67);
+
+    const progressCircle = new ProgressCircle(25, 'lg', 'Total user', true);
+    progressCircle.progress(2)
 
     this.addChild(
       new Container().display('flex').justifyContent('center')
@@ -222,10 +229,6 @@ export default class App extends PageComponent {
                     .style(ButtonSecondaryColor, ButtonMD)
                     .on({
                       click() {
-                        checkbox.check(check);
-                        check = !check;
-
-                        return;
                         inputValidator.validate().then(res => {
                           alert('success!');
                           input.removeError();
@@ -251,7 +254,9 @@ export default class App extends PageComponent {
                     selectInput.zIndex('2').position('relative'),
                     searchInput.zIndex('1').position('relative')
                   ),
-                  tooltip
+                  // tooltip,
+                  progress,
+                  progressCircle
                 )
             )
         )

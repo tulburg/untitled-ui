@@ -5,6 +5,7 @@ type TooltipPosition = 'center' | 'bottom-left' | 'bottom-right' | 'top' | 'left
 export default class Tooltip extends Container {
 
   host: ELEMENT;
+  hostIndex: string;
 
   constructor(text: string, config?: {
     supportingText?: string, mode?: 'dark' | 'light', arrow?: boolean
@@ -13,7 +14,7 @@ export default class Tooltip extends Container {
     super();
 
     this.text(text)
-      .maxWidth(320)
+      .maxWidth(320).lineHeight(18)
       .backgroundColor(
         config && config.mode === 'dark'
           ? Theme.colors.gray900
@@ -43,9 +44,9 @@ export default class Tooltip extends Container {
     }
 
     if (config && config.arrow) {
-      this.position('relative').pseudo({
+      this.position('relative').zIndex('1').pseudo({
         ':before': {
-          content: "''", position: 'absolute',
+          content: "''", position: 'absolute', zIndex: '-1',
           left: config && config.position ? left[config.position] : left.center,
           top: config && config.position ? top[config.position] : top.center,
           height: 12, width: 12, borderRadius: 1, transform: 'rotate(45deg)',
@@ -66,32 +67,22 @@ export default class Tooltip extends Container {
   }
 
   attach(host: ELEMENT) {
-    this.position('fixed').zIndex('1');
+    this.hostIndex = <any>host.zIndex();
+    this.position('absolute').top(-8).left(0).transform('translateY(-100%)')
+      .zIndex('1').display('none');
     this.host = host;
-    document.body.addEventListener('mouseover', (e: any) => {
-      const t = e.target;
-      if (host.node() === t || host.node().contains(t)) {
-        this.show();
-      }
-    })
-    document.body.addEventListener('mouseout', (e: any) => {
-      const t = e.target;
-      if (host.node() === t || host.node().contains(t)) {
-      } else this.hide();
-    })
-    this.host.addChild(this)
-  }
 
-  show() {
-    if (!this.host.node()) throw new Error("Host is not rendered!");
-    const hostNode: any = this.host.zIndex('10').node();
-    const node: any = this.node();
-    const rect = hostNode.getBoundingClientRect();
-    const topOffset = rect.top - node.offsetHeight - 4 - 6;
-    this.top(topOffset).display('block')
-      .left(rect.left);
-  }
-  hide() {
-    this.display('none');
+    //MARK: This code can be improved to use offsetTop calculation
+    // for components that can't host elements
+    const position = <any>this.host.position();
+    if (position !== 'absolute' && position !== 'fixed') {
+      this.host.position('relative');
+    }
+    this.host
+      .addChild(this.addClassName('tooltip'))
+      .pseudo({
+        ':hover .tooltip': { display: 'block' },
+        ':hover': { zIndex: '10' }
+      });
   }
 }

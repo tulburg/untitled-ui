@@ -46,6 +46,9 @@ export class Documentation extends PageComponent {
       'Checkboxes': 'Checkboxes allow users to select one or more items from a set, while radio buttons allow users to select just one option from a set. Both can also be used to turn an option on or off.',
       'Checkbox groups': 'Checkbox groups are a great way to make checkboxes more interesting, or to add more information to the user’s options without adding clutter. When options are explicitly separated into cards, it’s obvious which elements belong to which group and easier to quickly distinguish between checkbox options.',
       'Avatar': 'All images are sourced from Unsplash and can be used freely for commercial and non-commercial purposes. You can read more about Unsplash’s license here.',
+      'Tooltip': '',
+      'Progress bar': 'Progress bars indicate the percentage completed of a task. They can be useful to prompt the user to complete an action or process.',
+      'Progress cirlce': '',
       'Input validator': 'Form control validator class that receives a configuration and examine target fields on command to report a succes or error according to specified configurations'
     };
 
