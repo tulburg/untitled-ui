@@ -48,7 +48,8 @@ export class Documentation extends PageComponent {
       'Avatar': 'All images are sourced from Unsplash and can be used freely for commercial and non-commercial purposes. You can read more about Unsplash’s license here.',
       'Tooltip': '',
       'Progress bar': 'Progress bars indicate the percentage completed of a task. They can be useful to prompt the user to complete an action or process.',
-      'Progress cirlce': '',
+      'Progress cirlce': 'Progress circles indicate the percentage completed of a task. They can be useful to prompt the user to complete an action or process.',
+      'Sliders': 'Sliders allow users to select a range of data points. They’re useful for dynamic filtering of data.',
       'Input validator': 'Form control validator class that receives a configuration and examine target fields on command to report a succes or error according to specified configurations'
     };
 
@@ -102,7 +103,7 @@ export class Documentation extends PageComponent {
     } else {
       mainPane.addChild(
         titlePane('Shared components', 'Choose a component below to view the documentation'),
-        new Container().display('flex').marginTop(64)
+        new Container().display('flex').marginTop(64).marginBottom(140)
           .flexDirection('column').gap(28)
           .addChild(
             ...Object.keys(docs).map(doc => {

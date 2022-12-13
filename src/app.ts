@@ -7,6 +7,7 @@ import Checkbox from './components/checkbox';
 import DropDown from './components/dropdown';
 import Input from './components/input';
 import { ProgressBar, ProgressCircle } from './components/progress-indicator';
+import Slider from './components/slider';
 import Toggle from './components/toggle';
 import Tooltip from './components/tooltip';
 import { InputValidator } from './utils/input-validator';
@@ -185,6 +186,8 @@ export default class App extends PageComponent {
     const progressCircle = new ProgressCircle(25, 'lg', 'Total user', true);
     progressCircle.progress(2)
 
+    const slider = new Slider('tooltip-bottom').minWidth(340);
+
     this.addChild(
       new Container().display('flex').justifyContent('center')
         .addChild(
@@ -256,7 +259,8 @@ export default class App extends PageComponent {
                   ),
                   // tooltip,
                   progress,
-                  progressCircle
+                  progressCircle,
+                  slider
                 )
             )
         )
