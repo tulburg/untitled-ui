@@ -1,5 +1,6 @@
 import { Container, PageComponent, Image, Span, EM, H1, Link, P, H4 } from "@javascriptui/core";
 import { LinkGray } from "../components/button";
+import { Footer } from "./home";
 const logo = require('../assets/logo.png');
 
 declare let window: any;
@@ -83,12 +84,13 @@ export class Documentation extends PageComponent {
           .display('flex').flexDirection('column')
           .addChild(
             topbar,
-            new Container().width(720)
+            new Container().alignSelf('center').width(720)
               .marginTop(128).backgroundColor(Theme.colors.white)
               .addChild(mainPane)
               .media({
                 '(max-width: 800px)': { width: '100%' }
-              })
+              }),
+            new Footer().marginTop(48)
           ).media({
             '(max-width: 800px)': { padding: [0, 40] },
             '(max-width: 560px)': { padding: [0, 24] }

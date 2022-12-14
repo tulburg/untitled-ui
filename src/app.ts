@@ -6,7 +6,7 @@ import ButtonGroup from './components/button-groups';
 import Checkbox from './components/checkbox';
 import DropDown from './components/dropdown';
 import Input from './components/input';
-import { FlexVertical } from './components/layout';
+import { FlexHorizontal, FlexVertical } from './components/layout';
 import { ProgressBar, ProgressCircle } from './components/progress-indicator';
 import Slider from './components/slider';
 import Toggle from './components/toggle';
@@ -37,14 +37,16 @@ export default class App extends PageComponent {
                 .color(Theme.colors.grey600)
                 .fontWeight(Theme.weights.bold)
             ),
-          new Link().text('Documentation')
-            .style(LinkColor)
-            .attrTarget('_new').on({
-              click(e) {
-                e.preventDefault();
-                Router.go('/docs')
-              }
-            })
+          new FlexHorizontal(24).addChild(
+            ...[["Documentation", "docs"], ["Home", "home"]].map(item => new Link().text(item[0])
+              .style(LinkColor)
+              .attrTarget('_new').on({
+                click(e) {
+                  e.preventDefault();
+                  Router.go('/' + item[1])
+                }
+              }))
+          )
         )
     );
 

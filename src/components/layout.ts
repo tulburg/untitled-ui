@@ -20,3 +20,13 @@ export class FlexVertical extends Container {
       .gap(margin);
   }
 }
+
+export class PageLayout extends Container {
+  constructor() {
+    super();
+    this.width(1280).boxSizing('border-box').padding([0, 32])
+      .media({
+        '(max-width: 1328px)': { width: '100%', padding: [0, 24] }
+      })
+  }
+}
