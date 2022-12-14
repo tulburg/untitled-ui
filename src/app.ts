@@ -6,6 +6,7 @@ import ButtonGroup from './components/button-groups';
 import Checkbox from './components/checkbox';
 import DropDown from './components/dropdown';
 import Input from './components/input';
+import { FlexVertical } from './components/layout';
 import { ProgressBar, ProgressCircle } from './components/progress-indicator';
 import Slider from './components/slider';
 import Toggle from './components/toggle';
@@ -32,7 +33,7 @@ export default class App extends PageComponent {
             .addChild(
               new Image().attrSrc(logo).attrAlt('logo')
                 .width(32),
-              new H1().text('Buttons - ').fontSize(26)
+              new H1().text('Components - ').fontSize(26)
                 .color(Theme.colors.grey600)
                 .fontWeight(Theme.weights.bold)
             ),
@@ -191,8 +192,7 @@ export default class App extends PageComponent {
     this.addChild(
       new Container().display('flex').justifyContent('center')
         .addChild(
-          new Container().width(720).marginTop(100)
-            .display('flex').flexDirection('column').gap(32)
+          new FlexVertical(50).width(720).marginTop(100)
             .alignItems('start').paddingLeft(100)
             .addChild(
               new Button('Button CTA', 'icon-arrow-right', true)
