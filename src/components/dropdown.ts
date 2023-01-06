@@ -231,7 +231,7 @@ export class DropDownItem extends Container {
     if (toggle) {
       this.backgroundColor(Theme.colors.gray50);
       this.check.display('inline');
-      this.radioCheck.borderColor(Theme.colors.primary600);
+      this.radioCheck?.borderColor(Theme.colors.primary600);
       this.dispatch('selected');
       if (this.checkMark) {
         this.checkMark.display('inline');
@@ -239,7 +239,7 @@ export class DropDownItem extends Container {
     } else {
       this.backgroundColor(Theme.colors.white);
       this.check.display('none');
-      this.radioCheck.borderColor(Theme.colors.gray300);
+      this.radioCheck?.borderColor(Theme.colors.gray300);
       if (this.checkMark) {
         this.checkMark.display('none');
       }

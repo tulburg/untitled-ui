@@ -158,7 +158,7 @@ export default class App extends PageComponent {
       description: 'Save my login details for next time.'
     });
 
-    toggle.disable(true);
+    // toggle.disable(true);
 
 
     const checkbox = new Checkbox({
